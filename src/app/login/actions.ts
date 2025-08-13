@@ -5,10 +5,11 @@ import { redirect } from 'next/navigation';
 
 const API_URL = 'https://vollmed.rasppi.site';
 
-export async function login(data: FormData) {
+export async function login(prevState: any, data: FormData) {
   const email = data.get('email');
   const password = data.get('password');
 
+  let responseData;
   try {
     const response = await fetch(`${API_URL}/login`, {
       method: 'POST',
@@ -22,7 +23,7 @@ export async function login(data: FormData) {
       return { success: false, message: 'Credenciais inválidas. Por favor, tente novamente.' };
     }
     
-    const responseData = await response.json();
+    responseData = await response.json();
     const token = responseData.token;
 
     if (!token) {
@@ -41,7 +42,11 @@ export async function login(data: FormData) {
     return { success: false, message: 'Erro ao conectar com o servidor. Tente mais tarde.' };
   }
 
-  redirect('/');
+  if (responseData.token) {
+     redirect('/');
+  }
+
+  return { success: true, message: 'Login realizado com sucesso!' };
 }
 
 export async function logout() {

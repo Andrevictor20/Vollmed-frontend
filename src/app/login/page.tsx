@@ -1,6 +1,6 @@
 'use client';
 
-import { useFormState } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
 import { useEffect } from 'react';
 import Image from 'next/image';
 
@@ -11,12 +11,21 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { login } from './actions';
 
+function SubmitButton() {
+    const { pending } = useFormStatus();
+    return (
+        <Button type="submit" className="w-full" disabled={pending}>
+            {pending ? 'Entrando...' : 'Entrar'}
+        </Button>
+    )
+}
+
 export default function LoginPage() {
   const [state, formAction] = useFormState(login, undefined);
   const { toast } = useToast();
 
   useEffect(() => {
-    if (state?.message) {
+    if (state?.message && !state?.success) {
       toast({
         variant: 'destructive',
         title: 'Falha no Login',
@@ -59,10 +68,8 @@ export default function LoginPage() {
                 required 
               />
             </div>
-            <Button type="submit" className="w-full">
-              Entrar
-            </Button>
-            {state?.message && (
+            <SubmitButton />
+            {state?.message && !state.success && (
               <p className="text-sm font-medium text-destructive text-center">{state.message}</p>
             )}
           </form>
