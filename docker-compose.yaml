@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vollmed-frontend
+    ports:
+      - "9002:9002"
+    restart: unless-stopped
+    networks:
+      - vollmed-net
+
+networks:
+  vollmed-net:
+    driver: bridge
