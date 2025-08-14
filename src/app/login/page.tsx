@@ -1,7 +1,7 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
-import { useEffect } from 'react';
+import { useFormStatus } from 'react-dom';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,7 @@ function SubmitButton() {
 }
 
 export default function LoginPage() {
-  const [state, formAction] = useFormState(login, undefined);
+  const [state, setState] = useState<{success: boolean, message: string} | undefined>();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -33,6 +33,13 @@ export default function LoginPage() {
       });
     }
   }, [state, toast]);
+  
+  const handleLogin = async (formData: FormData) => {
+    const result = await login(null, formData);
+    if (result && !result.success) {
+      setState(result);
+    }
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
@@ -46,7 +53,7 @@ export default function LoginPage() {
           <CardDescription>Use seu e-mail e senha para acessar o painel.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form action={formAction} className="space-y-4">
+          <form action={handleLogin} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">E-mail</Label>
               <Input
