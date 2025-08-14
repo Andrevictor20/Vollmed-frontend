@@ -18,6 +18,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://vollmed.rasppi.site/:path*',
+      },
+    ]
+  },
 };
 
 export default nextConfig;

@@ -9,7 +9,7 @@ import type {
   DadosListagemPaciente
 } from './types';
 
-const API_URL = 'https://vollmed.rasppi.site';
+const API_URL = '/api';
 
 function getCookie(name: string) {
     const value = `; ${document.cookie}`;
